@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login Cracker</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- 头部 -->
+      <header class="header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg
+              viewBox="0 0 40 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient
+                  id="g1"
+                  x1="0"
+                  y1="0"
+                  x2="40"
+                  y2="40"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0%" stop-color="#6366f1" />
+                  <stop offset="100%" stop-color="#a78bfa" />
+                </linearGradient>
+              </defs>
+              <rect
+                x="2"
+                y="2"
+                width="36"
+                height="36"
+                rx="10"
+                fill="url(#g1)"
+              />
+              <path
+                d="M12 28 L20 10 L28 28 Z"
+                fill="none"
+                stroke="#fff"
+                stroke-width="2.2"
+                stroke-linejoin="round"
+              />
+              <circle cx="20" cy="22" r="3" fill="#fff" opacity="0.9" />
+              <path
+                d="M14 28 L26 28"
+                stroke="#fff"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <div class="brand-name"><span>凝石</span> · Login Cracker</div>
+            <div class="brand-desc">
+              智能登录安全测试工具 — 凝石安全社区出品
+            </div>
+          </div>
+        </div>
+        <div id="status-bar" class="status idle">就绪</div>
+      </header>
+
+      <!-- 标签页 -->
+      <nav class="tabs">
+        <button class="tab active" data-tab="config">配置</button>
+        <button class="tab" data-tab="dict">字典</button>
+        <button class="tab" data-tab="settings">设置</button>
+        <button class="tab" data-tab="attack">爆破</button>
+      </nav>
+
+      <!-- ========== Tab: 配置 ========== -->
+      <div class="tab-content active" id="tab-config">
+        <div class="btn-row">
+          <button id="btn-auto-detect" class="btn primary">自动识别</button>
+          <button id="btn-preview" class="btn">预览高亮</button>
+        </div>
+
+        <div class="field">
+          <label>用户名输入框</label>
+          <div class="selector-row">
+            <input type="text" id="sel-username" placeholder="CSS 选择器" />
+            <button class="btn small pick" data-target="username">选取</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>密码输入框</label>
+          <div class="selector-row">
+            <input type="text" id="sel-password" placeholder="CSS 选择器" />
+            <button class="btn small pick" data-target="password">选取</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>验证码输入框 <span class="hint">(可选)</span></label>
+          <div class="selector-row">
+            <input
+              type="text"
+              id="sel-captcha-input"
+              placeholder="CSS 选择器"
+            />
+            <button class="btn small pick" data-target="captchaInput">
+              选取
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>验证码图片 <span class="hint">(可选)</span></label>
+          <div class="selector-row">
+            <input type="text" id="sel-captcha-img" placeholder="CSS 选择器" />
+            <button class="btn small pick" data-target="captchaImg">
+              选取
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>登录按钮</label>
+          <div class="selector-row">
+            <input type="text" id="sel-submit" placeholder="CSS 选择器" />
+            <button class="btn small pick" data-target="submit">选取</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== Tab: 字典 ========== -->
+      <div class="tab-content" id="tab-dict">
+        <div class="field">
+          <div class="label-row">
+            <label>用户名字典</label>
+            <span id="user-count" class="count">0 条</span>
+          </div>
+          <div class="btn-row compact">
+            <button id="btn-load-user-file" class="btn small">加载文件</button>
+            <input type="file" id="file-username" accept=".txt" hidden />
+          </div>
+          <textarea
+            id="dict-username"
+            rows="5"
+            placeholder="每行一个用户名&#10;admin&#10;root&#10;test"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <div class="label-row">
+            <label>密码字典</label>
+            <span id="pwd-count" class="count">0 条</span>
+          </div>
+          <div class="btn-row compact">
+            <button id="btn-load-pwd-file" class="btn small">加载文件</button>
+            <input type="file" id="file-password" accept=".txt" hidden />
+          </div>
+          <textarea
+            id="dict-password"
+            rows="5"
+            placeholder="每行一个密码&#10;123456&#10;admin&#10;password"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- ========== Tab: 设置 ========== -->
+      <div class="tab-content" id="tab-settings">
+        <div class="field">
+          <label>尝试间隔 (毫秒)</label>
+          <input
+            type="number"
+            id="delay"
+            value="1500"
+            min="500"
+            max="60000"
+            step="100"
+          />
+        </div>
+
+        <div class="field">
+          <label>登录失败标识 <span class="hint">页面中出现的文本</span></label>
+          <input
+            type="text"
+            id="fail-indicator"
+            placeholder="如：密码错误、登录失败"
+          />
+        </div>
+
+        <div class="field">
+          <label>登录成功标识 <span class="hint">页面中出现的文本</span></label>
+          <input
+            type="text"
+            id="success-indicator"
+            placeholder="如：欢迎、dashboard"
+          />
+        </div>
+
+        <div class="field checkbox">
+          <label
+            ><input type="checkbox" id="chk-captcha" checked />
+            启用验证码识别</label
+          >
+        </div>
+
+        <div class="field checkbox">
+          <label
+            ><input type="checkbox" id="chk-refresh-captcha" checked />
+            每次尝试刷新验证码</label
+          >
+        </div>
+
+        <div class="field">
+          <label>OCR 状态</label>
+          <div id="ocr-status" class="ocr-status manual">手动输入模式</div>
+        </div>
+      </div>
+
+      <!-- ========== Tab: 爆破 ========== -->
+      <div class="tab-content" id="tab-attack">
+        <!-- 控制按钮 -->
+        <div class="btn-row">
+          <button id="btn-start" class="btn primary large">开始爆破</button>
+          <button id="btn-pause" class="btn warning large" disabled>
+            暂停
+          </button>
+          <button id="btn-stop" class="btn danger large" disabled>停止</button>
+        </div>
+
+        <!-- 验证码手动输入区（默认隐藏） -->
+        <div id="captcha-section" class="captcha-section" hidden>
+          <label>请输入验证码：</label>
+          <div class="captcha-row">
+            <img
+              id="captcha-preview"
+              class="captcha-preview"
+              src=""
+              alt="验证码"
+            />
+            <input
+              type="text"
+              id="captcha-manual-input"
+              placeholder="输入验证码"
+              autocomplete="off"
+              maxlength="10"
+            />
+            <button id="captcha-confirm" class="btn small primary">确认</button>
+          </div>
+        </div>
+
+        <!-- 进度 -->
+        <div id="progress-section" class="progress-section" hidden>
+          <div class="progress-bar">
+            <div id="progress-fill" class="progress-fill"></div>
+          </div>
+          <div id="progress-text" class="progress-text">0 / 0</div>
+          <div id="current-attempt" class="current-attempt"></div>
+        </div>
+
+        <!-- 日志 -->
+        <div class="field">
+          <div class="label-row">
+            <label>运行日志</label>
+            <button id="btn-clear-log" class="btn tiny">清空</button>
+          </div>
+          <div id="log" class="log-box"></div>
+        </div>
+
+        <!-- 结果 -->
+        <div class="field">
+          <div class="label-row">
+            <label>爆破结果</label>
+            <button id="btn-clear-results" class="btn tiny">清空</button>
+          </div>
+          <div id="results" class="results">
+            <div class="no-results">暂无结果</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 页脚 -->
+      <footer class="footer">
+        <span class="footer-left">凝石安全社区</span>
+        <span class="footer-right">v1.0.0</span>
+      </footer>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

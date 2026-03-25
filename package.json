@@ -1,0 +1,18 @@
+{
+  "name": "login-cracker",
+  "version": "1.0.0",
+  "description": "> **⚠️ 免责声明：** 本工具仅用于 **授权安全测试** 和教学用途。未经授权对他人系统进行爆破属于违法行为，使用者需自行承担法律责任。",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tesseract.js": "^7.0.0"
+  }
+}
